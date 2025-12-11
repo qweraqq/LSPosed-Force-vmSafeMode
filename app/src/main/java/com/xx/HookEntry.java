@@ -16,9 +16,22 @@ public class HookEntry implements IXposedHookLoadPackage {
     private static final int FLAG_VM_SAFE_MODE = 1<<14;
     private static final Set<String> TARGET_PACKAGES = new HashSet<>(Arrays.asList(
             "com.icbc",
+            "com.ccb.subject",
             "com.bankcomm.Bankcomm",
             "com.bankcomm",
-            "com.bankcomm.maidanba"
+            "com.bankcomm.maidanba",
+            "com.android.bankabc",
+            "com.chinamworld.main",
+            "com.yitong.mbank.psbc",
+            "cmb.pb",
+            "com.pingan.pocketbank",
+            "cn.com.spdb.mobilebank.per",
+            "com.cib.cibmb",
+            "com.ecitic.bank.mobile",
+            "com.cebbank.mobile.cemb",
+            "com.cmbc.cc.mb",
+            "com.webank.wemoney",
+            "com.mybank.android.phone"
     ));
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
@@ -40,7 +53,8 @@ public class HookEntry implements IXposedHookLoadPackage {
                             super.afterHookedMethod(param);
                             if (param.args == null) return;
                             ApplicationInfo appInfo = (ApplicationInfo) param.getResult();
-                            if (TARGET_PACKAGES.contains(appInfo.packageName) && (appInfo.flags & FLAG_VM_SAFE_MODE) == 0) {
+                            if (appInfo != null && appInfo.packageName != null &&
+                                    TARGET_PACKAGES.contains(appInfo.packageName) && (appInfo.flags & FLAG_VM_SAFE_MODE) == 0) {
                                 appInfo.flags |= FLAG_VM_SAFE_MODE;
                                 // XposedBridge.log("VmSafeMode: Force-enabled (Runtime) for " + appInfo.packageName);
                                 param.setResult(appInfo);
@@ -75,7 +89,8 @@ public class HookEntry implements IXposedHookLoadPackage {
                                     break;
                                 }
                             }
-                            if (appInfo != null && TARGET_PACKAGES.contains(appInfo.packageName) && (appInfo.flags & FLAG_VM_SAFE_MODE) == 0) {
+                            if (appInfo != null && appInfo.packageName != null
+                                    && TARGET_PACKAGES.contains(appInfo.packageName) && (appInfo.flags & FLAG_VM_SAFE_MODE) == 0) {
                                 appInfo.flags |= FLAG_VM_SAFE_MODE;
                                 // XposedBridge.log("VmSafeMode: Force-enabled (Runtime) for " + appInfo.packageName);
                             }
